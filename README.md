@@ -4,7 +4,7 @@
   <b>Display 'The Ambassador Platform' message statistics.</b>
 </p>
 
-[![Maintainability](https://img.shields.io/codeclimate/maintainability/alexlostorto/Whatsapp?style=for-the-badge&message=Code+Climate&labelColor=222222&logo=Code+Climate&logoColor=FFFFFF)](https://codeclimate.com/github/alexlostorto/Whatsapp/maintainability)
+[![Maintainability](https://img.shields.io/codeclimate/maintainability/alexlostorto/ambassador-platform-stats?style=for-the-badge&message=Code+Climate&labelColor=222222&logo=Code+Climate&logoColor=FFFFFF)](https://codeclimate.com/github/alexlostorto/ambassador-platform-stats/maintainability)
 
 The program contacts **The Ambassador Platform's API** and then outputs the statistics for your chats.
 
