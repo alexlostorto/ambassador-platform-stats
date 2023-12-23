@@ -57,6 +57,8 @@ class Stats():
 
     def countMessages(self):
         self.getMessages()
+        self.longestMessage = {"length": 0, "message": ""}
+        self.shortestMessage = {"length": float('inf'), "message": ""}
 
         if self.options['text-count']:
             self.textToFind = input("Text to count: ")
@@ -75,9 +77,12 @@ class Stats():
                 self.statistics['users'][userID] = username
 
             if date not in self.statistics['stats']:
-                self.statistics['stats'][date] = {"messages": {}, "text": {}}
+                self.statistics['stats'][date] = {"messages": {}, "text": {}, "words": {}}
 
+            self.longestMessage = {"length": sum(1 for _ in message.split(' ')), "message": message} if self.longestMessage["length"] < sum(1 for _ in message.split(' ')) else self.longestMessage
+            self.shortestMessage = {"length": sum(1 for _ in message.split(' ')), "message": message} if self.shortestMessage["length"] > sum(1 for _ in message.split(' ')) else self.shortestMessage
             self.statistics['stats'][date]['messages'][userID] = self.statistics['stats'][date]['messages'].get(userID, 0) + 1
+            self.statistics['stats'][date]['words'][userID] = self.statistics['stats'][date]['words'].get(userID, 0) + sum(1 for _ in message.split(' '))
 
             if self.options['text-count'] and self.textToFind.lower() in message.lower():
                 self.statistics['stats'][date]['text'][userID] = self.statistics['stats'][date]['text'].get(userID, 0) + 1
@@ -87,11 +92,15 @@ class Stats():
     def printStatistics(self):
         self.printDailyMessages()
 
-        print("\n---TOTAL---")
+        print("\n---TOTAL MESSAGES---")
         self.printTotalMessagesPerUser()
-        self.printTotalTextPerUser()
         self.printTotalMessages()
+        self.printTotalTextPerUser()
         self.printTotalText()
+        print("\n---TOTAL WORDS---")
+        self.printTotalWordsPerUser()
+        self.printTotalWords()
+        # self.printMessageLengths()
 
     def printDailyMessages(self):
         if not self.options['daily-messages']: return
@@ -113,6 +122,11 @@ class Stats():
         for userID, username in self.statistics['users'].items():
             messages = sum(date['text'].get(userID, 0) for date in self.statistics['stats'].values())
             print(f"Times {username} said '{self.textToFind}': {messages: ,}")
+    
+    def printTotalWordsPerUser(self):
+        for userID, username in self.statistics['users'].items():
+            words = sum(date['words'].get(userID, 0) for date in self.statistics['stats'].values())
+            print(f"{username}: {words: ,}")
 
     def printTotalMessages(self):
         self.totalMessages = sum(sum(date['messages'].values()) for date in self.statistics['stats'].values())
@@ -122,3 +136,11 @@ class Stats():
         if not self.options['text-count']: return
         self.totalText = sum(sum(date['text'].values()) for date in self.statistics['stats'].values())
         print(f"Total times '{self.textToFind}' was said: {self.totalText: ,}")
+
+    def printTotalWords(self):
+        self.totalWords = sum(sum(date['words'].values()) for date in self.statistics['stats'].values())
+        print(f"Total words: {self.totalWords: ,}")
+
+    def printMessageLengths(self):
+        print(f"Shortest message: {self.shortestMessage} words")
+        print(f"Longest message: {self.longestMessage} words")

@@ -12,12 +12,18 @@ _Note: [The Ambassador Platform](https://www.theambassadorplatform.com/) is a ch
 
 ```python
 # Example in console
+---TOTAL MESSAGES---
 Alex: 5,672
 Jane: 6,673
 Times Alex said '😎':  4
 Times Jane said '😎':  9
 Total messages: 12,345
 Total times '😎' was said:  13
+
+---TOTAL WORDS---
+Alex: 23,452
+Jane: 27,634
+Total words: 51,086
 ```
 
 ## ⚡ Quick setup
