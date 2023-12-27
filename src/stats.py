@@ -10,7 +10,7 @@ class Stats():
         self.textToFind = ""
         self.totalMessages = 0
         self.totalTextCount = 0
-        self.statistics = {"users": {}, "stats": {}}
+        self.statistics = {"users": {}, "stats": {}, "words": {}}
         self.options = {
             'daily-messages': False,
             'text-count': False
@@ -78,11 +78,14 @@ class Stats():
 
             if date not in self.statistics['stats']:
                 self.statistics['stats'][date] = {"messages": {}, "text": {}, "words": {}}
-
+            
             self.longestMessage = {"length": sum(1 for _ in message.split(' ')), "message": message} if self.longestMessage["length"] < sum(1 for _ in message.split(' ')) else self.longestMessage
             self.shortestMessage = {"length": sum(1 for _ in message.split(' ')), "message": message} if self.shortestMessage["length"] > sum(1 for _ in message.split(' ')) else self.shortestMessage
             self.statistics['stats'][date]['messages'][userID] = self.statistics['stats'][date]['messages'].get(userID, 0) + 1
             self.statistics['stats'][date]['words'][userID] = self.statistics['stats'][date]['words'].get(userID, 0) + sum(1 for _ in message.split(' '))
+            
+            for word in message.split(' '):
+                self.statistics['words'][word.lower()] = self.statistics['words'].get(word.lower(), 0) + 1
 
             if self.options['text-count'] and self.textToFind.lower() in message.lower():
                 self.statistics['stats'][date]['text'][userID] = self.statistics['stats'][date]['text'].get(userID, 0) + 1
@@ -101,6 +104,10 @@ class Stats():
         self.printTotalWordsPerUser()
         self.printTotalWords()
         # self.printMessageLengths()
+        print("\n---MOST COMMON WORDS---")
+        self.printMostCommonWords(5)
+        print("\n---LEAST COMMON WORDS---")
+        self.printLeastCommonWords(5)
 
     def printDailyMessages(self):
         if not self.options['daily-messages']: return
@@ -144,3 +151,11 @@ class Stats():
     def printMessageLengths(self):
         print(f"Shortest message: {self.shortestMessage} words")
         print(f"Longest message: {self.longestMessage} words")
+
+    def printMostCommonWords(self, number):
+        for word, count in reversed(sorted(self.statistics['words'].items(), key=lambda item: item[1])[-number:]):
+            print(f"{word}: {count}")
+
+    def printLeastCommonWords(self, number):
+        for word, count in sorted(self.statistics['words'].items(), key=lambda item: item[1])[:number]:
+            print(f"{word}: {count}")
