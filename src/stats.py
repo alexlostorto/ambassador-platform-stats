@@ -79,10 +79,11 @@ class Stats():
             if date not in self.statistics['stats']:
                 self.statistics['stats'][date] = {"messages": {}, "text": {}, "words": {}}
 
-            self.longestMessage = {"length": sum(1 for _ in message.split(' ')), "message": message} if self.longestMessage["length"] < sum(1 for _ in message.split(' ')) else self.longestMessage
-            self.shortestMessage = {"length": sum(1 for _ in message.split(' ')), "message": message} if self.shortestMessage["length"] > sum(1 for _ in message.split(' ')) else self.shortestMessage
+            words = len(message.split(' '))
+            self.longestMessage = {"length": words, "message": message} if self.longestMessage["length"] < words else self.longestMessage
+            self.shortestMessage = {"length": words, "message": message} if self.shortestMessage["length"] > words else self.shortestMessage
             self.statistics['stats'][date]['messages'][userID] = self.statistics['stats'][date]['messages'].get(userID, 0) + 1
-            self.statistics['stats'][date]['words'][userID] = self.statistics['stats'][date]['words'].get(userID, 0) + sum(1 for _ in message.split(' '))
+            self.statistics['stats'][date]['words'][userID] = self.statistics['stats'][date]['words'].get(userID, 0) + words
 
             if self.options['text-count'] and self.textToFind.lower() in message.lower():
                 self.statistics['stats'][date]['text'][userID] = self.statistics['stats'][date]['text'].get(userID, 0) + 1
