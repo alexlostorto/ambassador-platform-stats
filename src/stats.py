@@ -10,7 +10,7 @@ class Stats():
         self.textToFind = ""
         self.totalMessages = 0
         self.totalTextCount = 0
-        self.statistics = {"users": {}, "stats": {}}
+        self.statistics = {"users": {}, "stats": {}, "words": {}}
         self.options = {
             'daily-messages': False,
             'text-count': False
@@ -102,6 +102,10 @@ class Stats():
         self.printTotalWordsPerUser()
         self.printTotalWords()
         # self.printMessageLengths()
+        print("\n---MOST COMMON WORDS---")
+        self.printMostCommonWords(5)
+        print("\n---LEAST COMMON WORDS---")
+        self.printLeastCommonWords(5)
 
     def printDailyMessages(self):
         if not self.options['daily-messages']: return
@@ -145,3 +149,11 @@ class Stats():
     def printMessageLengths(self):
         print(f"Shortest message: {self.shortestMessage} words")
         print(f"Longest message: {self.longestMessage} words")
+
+    def printMostCommonWords(self, number):
+        for word, count in reversed(sorted(self.statistics['words'].items(), key=lambda item: item[1])[-number:]):
+            print(f"{word}: {count}")
+
+    def printLeastCommonWords(self, number):
+        for word, count in sorted(self.statistics['words'].items(), key=lambda item: item[1])[:number]:
+            print(f"{word}: {count}")
