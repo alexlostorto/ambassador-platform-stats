@@ -84,6 +84,9 @@ class Stats():
             self.shortestMessage = {"length": words, "message": message} if self.shortestMessage["length"] > words else self.shortestMessage
             self.statistics['stats'][date]['messages'][userID] = self.statistics['stats'][date]['messages'].get(userID, 0) + 1
             self.statistics['stats'][date]['words'][userID] = self.statistics['stats'][date]['words'].get(userID, 0) + words
+            
+            for word in message.split(' '):
+                self.statistics['words'][word.lower()] = self.statistics['words'].get(word.lower(), 0) + 1
 
             if self.options['text-count'] and self.textToFind.lower() in message.lower():
                 self.statistics['stats'][date]['text'][userID] = self.statistics['stats'][date]['text'].get(userID, 0) + 1
