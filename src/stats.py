@@ -105,9 +105,7 @@ class Stats():
         self.printTotalWordsPerUser()
         self.printTotalWords()
         # self.printMessageLengths()
-        print("\n---MOST COMMON WORDS---")
         self.printMostCommonWords(5)
-        print("\n---LEAST COMMON WORDS---")
         self.printLeastCommonWords(5)
 
     def printDailyMessages(self):
@@ -154,9 +152,11 @@ class Stats():
         print(f"Longest message: {self.longestMessage} words")
 
     def printMostCommonWords(self, number):
+        print("\n---MOST COMMON WORDS---")
         for word, count in reversed(sorted(self.statistics['words'].items(), key=lambda item: item[1])[-number:]):
             print(f"{word}: {count}")
 
     def printLeastCommonWords(self, number):
+        print("\n---LEAST COMMON WORDS---")
         for word, count in sorted(self.statistics['words'].items(), key=lambda item: item[1])[:number]:
             print(f"{word}: {count}")
