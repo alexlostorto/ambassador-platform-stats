@@ -10,7 +10,7 @@ class Stats():
         self.textToFind = ""
         self.totalMessages = 0
         self.totalTextCount = 0
-        self.statistics = {"users": {}, "stats": {}, "words": {}}
+        self.statistics = {"users": {}, "stats": {}, "words": {}, "characters": {}}
         self.options = {
             'daily-messages': False,
             'text-count': False
@@ -77,13 +77,14 @@ class Stats():
                 self.statistics['users'][userID] = username
 
             if date not in self.statistics['stats']:
-                self.statistics['stats'][date] = {"messages": {}, "text": {}, "words": {}}
+                self.statistics['stats'][date] = {"messages": {}, "text": {}, "words": {}, "characters": {}}
 
             words = len(message.split(' '))
             self.longestMessage = {"length": words, "message": message} if self.longestMessage["length"] < words else self.longestMessage
             self.shortestMessage = {"length": words, "message": message} if self.shortestMessage["length"] > words else self.shortestMessage
             self.statistics['stats'][date]['messages'][userID] = self.statistics['stats'][date]['messages'].get(userID, 0) + 1
             self.statistics['stats'][date]['words'][userID] = self.statistics['stats'][date]['words'].get(userID, 0) + words
+            self.statistics['stats'][date]['characters'][userID] = self.statistics['stats'][date]['characters'].get(userID, 0) + len(message)
             
             for word in message.split(' '):
                 self.statistics['words'][word.lower()] = self.statistics['words'].get(word.lower(), 0) + 1
@@ -104,6 +105,9 @@ class Stats():
         print("\n---TOTAL WORDS---")
         self.printTotalWordsPerUser()
         self.printTotalWords()
+        print("\n---TOTAL CHARACTERS---")
+        self.printTotalCharactersPerUser()
+        self.printTotalCharacters()
         # self.printMessageLengths()
         self.printMostCommonWords(5)
         self.printLeastCommonWords(5)
@@ -134,6 +138,11 @@ class Stats():
             words = sum(date['words'].get(userID, 0) for date in self.statistics['stats'].values())
             print(f"{username}: {words: ,}")
 
+    def printTotalCharactersPerUser(self):
+        for userID, username in self.statistics['users'].items():
+            characters = sum(date['characters'].get(userID, 0) for date in self.statistics['stats'].values())
+            print(f"{username}: {characters: ,}")
+
     def printTotalMessages(self):
         self.totalMessages = sum(sum(date['messages'].values()) for date in self.statistics['stats'].values())
         print(f"Total messages: {self.totalMessages: ,}")
@@ -146,6 +155,10 @@ class Stats():
     def printTotalWords(self):
         self.totalWords = sum(sum(date['words'].values()) for date in self.statistics['stats'].values())
         print(f"Total words: {self.totalWords: ,}")
+
+    def printTotalCharacters(self):
+        self.totalCharacters = sum(sum(date['characters'].values()) for date in self.statistics['stats'].values())
+        print(f"Total characters: {self.totalCharacters: ,}")
 
     def printMessageLengths(self):
         print(f"Shortest message: {self.shortestMessage} words")
